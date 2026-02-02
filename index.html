@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esports Player Introduction</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Logo Header -->
+        <header class="team-header">
+            <img src="assets/logo.jpg" alt="Team Logo" class="side-logo">
+        </header>
+
+        <main class="main-content">
+            <!-- Left Panel: Player info -->
+            <section class="player-info" id="player-info">
+                <div class="info-content">
+                    <div class="main-details">
+                        <h3 class="real-name" id="display-real-name">DARK</h3>
+                        <h1 class="handle" id="display-handle">DARK</h1>
+                        <p class="bio" id="display-bio">
+                            Controller main. Provides site smokes, enemy intel, and stability for the team. A dependable
+                            clutch player in high-pressure rounds.
+                        </p>
+                    </div>
+
+                    <!-- Highlights Section (only for DARK) -->
+                    <div id="highlights-section" class="highlights-section" style="display: none;">
+                        <h4 class="section-title">HIGHLIGHTS</h4>
+                        <div class="video-frame">
+                            <video id="highlight-video" controls muted loop>
+                                <source src="assets/0202.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <p class="highlight-desc" id="display-highlight-desc"></p>
+                    </div>
+
+                    <div class="social-links">
+                        <button class="social-btn"><img src="https://img.icons8.com/ios-filled/50/ffffff/twitterx.png"
+                                alt="X"></button>
+                        <button class="social-btn"><img src="https://img.icons8.com/ios-filled/50/ffffff/twitch.png"
+                                alt="Twitch"></button>
+                    </div>
+
+                    <div class="navigation-controls">
+                        <div class="pagination">
+                            <span class="current-idx" id="current-idx">1</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill"></div>
+                            </div>
+                            <span class="total-count">5</span>
+                        </div>
+                        <div class="nav-buttons">
+                            <button id="prev-btn" class="nav-btn">←</button>
+                            <button id="next-btn" class="nav-btn">→</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Player Cards Carousel -->
+            <section class="cards-carousel">
+                <div class="carousel-track" id="carousel-track">
+                    <!-- Cards will be injected by JS -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
