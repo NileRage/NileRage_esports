@@ -87,16 +87,16 @@ body {
 
 /* Left Panel Info */
 .player-info {
-    opacity: 0;
-    transform: translateX(-20px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    z-index: 100;
-    pointer-events: none;
-}
-
-.player-info.active {
     opacity: 1;
     transform: translateX(0);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    z-index: 100;
+    pointer-events: auto;
+}
+
+.player-info:not(.active) {
+    /* Optional: slightly dim when switching but keep visible */
+    opacity: 0.8;
 }
 
 .info-content {

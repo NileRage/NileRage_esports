@@ -42,6 +42,7 @@ const players = [
 
 let currentIdx = 0;
 let lastSelectedIdx = -1;
+
 const track = document.getElementById('carousel-track');
 const infoPanel = document.getElementById('player-info');
 const infoContent = document.querySelector('.info-content');
@@ -55,6 +56,8 @@ const highlightDesc = document.getElementById('display-highlight-desc');
 const videoContainer = document.getElementById('video-container');
 
 function initCarousel() {
+    if (!track) return;
+
     players.forEach((player, index) => {
         const card = document.createElement('div');
         card.className = `player-card ${index === 0 ? 'active' : ''}`;
@@ -78,16 +81,14 @@ function updateSelection(index) {
 }
 
 function updateUI(isSelectionChange = false) {
-    // Update Track Position
     const cards = document.querySelectorAll('.player-card');
-    if (cards.length > 0) {
-        const cardWidth = cards[0].offsetWidth;
-        const gap = 32; // match gap in CSS (2rem = 32px usually, or we can compute it)
+    if (cards.length > 0 && track) {
+        const cardWidth = cards[0].offsetWidth || 350; // Fallback to 350 if offsetWidth is 0
+        const gap = 32;
         const offset = currentIdx * -(cardWidth + gap);
         track.style.transform = `translateX(${offset}px)`;
     }
 
-    // 2. Only update player content and active classes if the selection actually changed
     if (isSelectionChange) {
         cards.forEach((card, idx) => {
             if (idx === currentIdx) {
@@ -97,62 +98,69 @@ function updateUI(isSelectionChange = false) {
             }
         });
 
-        // Update Left Panel with animation
-        infoPanel.classList.remove('active');
+        if (infoPanel) {
+            infoPanel.classList.remove('active');
 
-        setTimeout(() => {
-            const player = players[currentIdx];
+            setTimeout(() => {
+                const player = players[currentIdx];
+                if (!player) return;
 
-            // Check if we actually need to update the content (new player selected)
-            if (lastSelectedIdx !== currentIdx) {
-                infoContent.scrollTop = 0; // Reset scroll
-                displayRealName.textContent = player.realName;
-                displayHandle.textContent = player.name;
-                displayBio.textContent = player.bio;
-                currentIndexDisplay.textContent = currentIdx + 1;
-                progressFill.style.width = `${((currentIdx + 1) / players.length) * 100}%`;
+                if (lastSelectedIdx !== currentIdx) {
+                    if (infoContent) infoContent.scrollTop = 0;
+                    if (displayRealName) displayRealName.textContent = player.realName;
+                    if (displayHandle) displayHandle.textContent = player.name;
+                    if (displayBio) displayBio.textContent = player.bio;
+                    if (currentIndexDisplay) currentIndexDisplay.textContent = currentIdx + 1;
+                    if (progressFill) progressFill.style.width = `${((currentIdx + 1) / players.length) * 100}%`;
 
-                // highlights logic
-                if (player.hasHighlights) {
-                    highlightsSection.style.display = 'block';
-                    highlightDesc.textContent = player.highlightDesc;
+                    if (player.hasHighlights) {
+                        if (highlightsSection) highlightsSection.style.display = 'block';
+                        if (highlightDesc) highlightDesc.textContent = player.highlightDesc;
 
-                    // Only re-inject Iframe if it's not already there or it's a different video
-                    const existingIframe = videoContainer.querySelector('iframe');
-                    if (!existingIframe || existingIframe.src !== player.highlightVideo) {
-                        videoContainer.innerHTML = `
-                            <iframe 
-                                src="${player.highlightVideo}" 
-                                width="100%" 
-                                height="100%" 
-                                frameborder="0" 
-                                allow="autoplay; fullscreen" 
-                                allowfullscreen="true">
-                            </iframe>
-                        `;
+                        if (videoContainer) {
+                            const existingIframe = videoContainer.querySelector('iframe');
+                            if (!existingIframe || existingIframe.src !== player.highlightVideo) {
+                                videoContainer.innerHTML = `
+                                    <iframe 
+                                        src="${player.highlightVideo}" 
+                                        width="100%" 
+                                        height="100%" 
+                                        frameborder="0" 
+                                        allow="autoplay; fullscreen" 
+                                        allowfullscreen="true">
+                                    </iframe>
+                                `;
+                            }
+                        }
+                    } else {
+                        if (highlightsSection) highlightsSection.style.display = 'none';
+                        if (videoContainer) videoContainer.innerHTML = '';
                     }
-                } else {
-                    highlightsSection.style.display = 'none';
-                    videoContainer.innerHTML = '';
+
+                    lastSelectedIdx = currentIdx;
                 }
 
-                lastSelectedIdx = currentIdx;
-            }
-
-            infoPanel.classList.add('active');
-        }, 300);
+                infoPanel.classList.add('active');
+            }, 300);
+        }
     }
 }
 
-document.getElementById('prev-btn').onclick = () => updateSelection(currentIdx - 1);
-document.getElementById('next-btn').onclick = () => updateSelection(currentIdx + 1);
+document.addEventListener('DOMContentLoaded', () => {
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
 
-// Initialize
-initCarousel();
-infoPanel.classList.add('active');
+    if (prevBtn) prevBtn.onclick = () => updateSelection(currentIdx - 1);
+    if (nextBtn) nextBtn.onclick = () => updateSelection(currentIdx + 1);
+
+    initCarousel();
+
+    // Fallback if updateUI didn't trigger panel
+    if (infoPanel) infoPanel.classList.add('active');
+});
 
 window.addEventListener('resize', () => updateUI(false));
-// Reveal About Section on Scroll
+
 window.addEventListener('scroll', () => {
     const aboutSection = document.querySelector('.about-section');
     if (aboutSection) {
