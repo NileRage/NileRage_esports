@@ -162,15 +162,15 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('resize', () => updateUI(false));
 
 window.addEventListener('scroll', () => {
-    const aboutSection = document.querySelector('.about-section');
-    if (aboutSection) {
-        const sectionTop = aboutSection.getBoundingClientRect().top;
+    const revealSections = document.querySelectorAll('.about-section');
+    revealSections.forEach(section => {
+        const sectionTop = section.getBoundingClientRect().top;
         const triggerPoint = window.innerHeight - 150;
 
         if (sectionTop < triggerPoint) {
-            aboutSection.classList.add('visible');
+            section.classList.add('visible');
         }
-    }
+    });
 });
 
 // Initial load check
