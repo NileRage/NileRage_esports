@@ -5,7 +5,7 @@ const players = [
         bio: "Controller main. Provides site smokes, enemy intel, and stability for the team. A dependable clutch player in high-pressure rounds.",
         image: "assets/player_placeholder.png",
         hasHighlights: true,
-        highlightVideo: "assets/0202.mp4",
+        highlightVideo: "https://drive.google.com/file/d/1Jgmur4WuHlF_-6wyl-lnSns_kTv5bMq3/preview",
         highlightDesc: "DARK, 20 years old, is an experienced esports player representing NileRage. With years of competitive experience in the esports field, he has built strong mechanical skill, precise aim, and solid game sense. His consistency and calm performance under pressure make him tournament-ready, while his teamwork and discipline allow him to adapt to high-level competitive environments. DARK is always prepared for official matches and competitive tours, bringing focus and reliability to his team."
     },
     {
@@ -32,12 +32,13 @@ const players = [
         bio: "The sniper extraordinaire. Give him a long line of sight and the game is already over. TALAL's reflexes are second to none in the region.",
         image: "assets/player_placeholder.png",
         hasHighlights: true,
-        highlightVideo: "assets/55.mp4",
+        highlightVideo: "https://drive.google.com/file/d/1c-qGdpATAs9R72aGNvMtYRp9XUD0LYDy/preview",
         highlightDesc: "TALAL is the team’s sniper extraordinaire. Give him a long line of sight and the round is often decided before it begins. Known across the region for lightning-fast reflexes and elite precision, TALAL consistently controls key angles and punishes even the smallest mistakes. His calm aim under pressure and exceptional positioning make him a constant threat, forcing opponents to rethink every peek and every push."
     }
 ];
 
 let currentIdx = 0;
+let lastSelectedIdx = -1;
 const track = document.getElementById('carousel-track');
 const infoPanel = document.getElementById('player-info');
 const infoContent = document.querySelector('.info-content');
@@ -48,6 +49,7 @@ const currentIndexDisplay = document.getElementById('current-idx');
 const progressFill = document.getElementById('progress-fill');
 const highlightsSection = document.getElementById('highlights-section');
 const highlightDesc = document.getElementById('display-highlight-desc');
+const videoContainer = document.getElementById('video-container');
 const highlightVideo = document.getElementById('highlight-video');
 
 function initCarousel() {
@@ -62,7 +64,7 @@ function initCarousel() {
         card.onclick = () => updateSelection(index);
         track.appendChild(card);
     });
-    updateUI();
+    updateUI(true);
 }
 
 function updateSelection(index) {
@@ -70,10 +72,10 @@ function updateSelection(index) {
     if (index >= players.length) index = 0;
 
     currentIdx = index;
-    updateUI();
+    updateUI(true);
 }
 
-function updateUI() {
+function updateUI(isSelectionChange = false) {
     // Update Track Position
     const cards = document.querySelectorAll('.player-card');
     if (cards.length > 0) {
@@ -83,49 +85,61 @@ function updateUI() {
         track.style.transform = `translateX(${offset}px)`;
     }
 
-    // Update Cards
-    cards.forEach((card, idx) => {
-        if (idx === currentIdx) {
-            card.classList.add('active');
-        } else {
-            card.classList.remove('active');
-        }
-    });
+    // 2. Only update player content and active classes if the selection actually changed
+    if (isSelectionChange) {
+        cards.forEach((card, idx) => {
+            if (idx === currentIdx) {
+                card.classList.add('active');
+            } else {
+                card.classList.remove('active');
+            }
+        });
 
-    // Update Left Panel with animation
-    infoPanel.classList.remove('active');
-    infoContent.scrollTop = 0; // Reset scroll
+        // Update Left Panel with animation
+        infoPanel.classList.remove('active');
 
-    setTimeout(() => {
-        const player = players[currentIdx];
-        displayRealName.textContent = player.realName;
-        displayHandle.textContent = player.name;
-        displayBio.textContent = player.bio;
-        currentIndexDisplay.textContent = currentIdx + 1;
-        progressFill.style.width = `${((currentIdx + 1) / players.length) * 100}%`;
+        setTimeout(() => {
+            const player = players[currentIdx];
 
-        // highlights logic
-        if (player.hasHighlights) {
-            highlightsSection.style.display = 'block';
-            highlightDesc.textContent = player.highlightDesc;
+            // Check if we actually need to update the content (new player selected)
+            if (lastSelectedIdx !== currentIdx) {
+                infoContent.scrollTop = 0; // Reset scroll
+                displayRealName.textContent = player.realName;
+                displayHandle.textContent = player.name;
+                displayBio.textContent = player.bio;
+                currentIndexDisplay.textContent = currentIdx + 1;
+                progressFill.style.width = `${((currentIdx + 1) / players.length) * 100}%`;
 
-            // Update video source if it's different
-            const currentVideoSrc = highlightVideo.querySelector('source').src;
-            const newVideoSrc = window.location.origin + '/' + player.highlightVideo;
+                // highlights logic
+                if (player.hasHighlights) {
+                    highlightsSection.style.display = 'block';
+                    highlightDesc.textContent = player.highlightDesc;
 
-            if (!currentVideoSrc.includes(player.highlightVideo)) {
-                highlightVideo.querySelector('source').src = player.highlightVideo;
-                highlightVideo.load();
+                    // Only re-inject Iframe if it's not already there or it's a different video
+                    const existingIframe = videoContainer.querySelector('iframe');
+                    if (!existingIframe || existingIframe.src !== player.highlightVideo) {
+                        videoContainer.innerHTML = `
+                            <iframe 
+                                src="${player.highlightVideo}" 
+                                width="100%" 
+                                height="100%" 
+                                frameborder="0" 
+                                allow="autoplay; fullscreen" 
+                                allowfullscreen="true">
+                            </iframe>
+                        `;
+                    }
+                } else {
+                    highlightsSection.style.display = 'none';
+                    videoContainer.innerHTML = '';
+                }
+
+                lastSelectedIdx = currentIdx;
             }
 
-            highlightVideo.play().catch(() => { }); // auto play if possible
-        } else {
-            highlightsSection.style.display = 'none';
-            highlightVideo.pause();
-        }
-
-        infoPanel.classList.add('active');
-    }, 300);
+            infoPanel.classList.add('active');
+        }, 300);
+    }
 }
 
 document.getElementById('prev-btn').onclick = () => updateSelection(currentIdx - 1);
@@ -135,4 +149,19 @@ document.getElementById('next-btn').onclick = () => updateSelection(currentIdx +
 initCarousel();
 infoPanel.classList.add('active');
 
-window.addEventListener('resize', updateUI);
+window.addEventListener('resize', () => updateUI(false));
+// Reveal About Section on Scroll
+window.addEventListener('scroll', () => {
+    const aboutSection = document.querySelector('.about-section');
+    if (aboutSection) {
+        const sectionTop = aboutSection.getBoundingClientRect().top;
+        const triggerPoint = window.innerHeight - 150;
+
+        if (sectionTop < triggerPoint) {
+            aboutSection.classList.add('visible');
+        }
+    }
+});
+
+// Initial load check
+window.dispatchEvent(new Event('scroll'));

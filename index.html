@@ -13,7 +13,16 @@
     <div class="app-container">
         <!-- Logo Header -->
         <header class="team-header">
-            <img src="assets/logo.jpg" alt="Team Logo" class="side-logo">
+            <div class="logo-container">
+                <img src="assets/logo.png" alt="Team Logo" class="side-logo">
+                <span class="team-name">NileRage</span>
+                <div class="premier-badge">
+                    <div class="trophy-icon-wrapper">
+                        <img src="assets/premier-trophy.png" alt="Premier Trophy" class="trophy-icon">
+                    </div>
+                    <span class="badge-text">Premier Winner</span>
+                </div>
+            </div>
         </header>
 
         <main class="main-content">
@@ -32,11 +41,8 @@
                     <!-- Highlights Section (only for DARK) -->
                     <div id="highlights-section" class="highlights-section" style="display: none;">
                         <h4 class="section-title">HIGHLIGHTS</h4>
-                        <div class="video-frame">
-                            <video id="highlight-video" controls muted loop>
-                                <source src="assets/0202.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
+                        <div class="video-frame" id="video-container">
+                            <!-- Iframe will be injected here -->
                         </div>
                         <p class="highlight-desc" id="display-highlight-desc"></p>
                     </div>
@@ -71,6 +77,40 @@
                 </div>
             </section>
         </main>
+
+        <section class="about-section" id="about">
+            <h2 class="about-title">About NileRage</h2>
+
+            <div class="team-photo-frame">
+                <img src="assets/team-photo.jpg" alt="NileRage Team" class="team-photo">
+            </div>
+
+            <div class="about-description">
+                <p>
+                    NileRage is a professional Egyptian VALORANT esports team built around competitive excellence,
+                    structured teamwork, and long-term development within the esports industry.
+                </p>
+                <p>
+                    The team reached a major competitive achievement by winning the VALORANT Premier League,
+                    demonstrating the ability to compete and succeed at the highest organized level of play.
+                    In addition, NileRage has consistently delivered strong results, securing Top 5 placements
+                    in multiple tournaments, including the Intel Camps Cup for ECU University, against high-level
+                    collegiate and semi-professional teams.
+                </p>
+                <p>
+                    NileRage consists of highly specialized players with clearly defined in-game roles,
+                    advanced tactical awareness, and strong communication discipline. This professional structure
+                    allows the team to maintain consistent performance across official leagues and third-party
+                    competitions, establishing NileRage as one of the leading VALORANT teams in Egypt.
+                </p>
+                <p>
+                    From a sponsorship perspective, NileRage offers a strong platform for brand exposure within
+                    the rapidly growing Egyptian esports market. The team represents professionalism,
+                    competitive integrity, and positive brand alignment, making it an ideal partner for
+                    organizations seeking visibility, credibility, and sustainable growth in esports.
+                </p>
+            </div>
+        </section>
     </div>
 
     <script src="script.js"></script>
