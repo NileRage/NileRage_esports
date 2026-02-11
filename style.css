@@ -476,6 +476,67 @@ body {
     text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
 }
 
+/* Live Match Button */
+.live-match-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: rgba(255, 0, 0, 0.1);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    padding: 8px 18px;
+    border-radius: 40px;
+    border: 1px solid rgba(255, 0, 0, 0.5);
+    margin-left: 1.5rem;
+    height: 40px;
+    transition: all 0.3s ease;
+    animation: live-glow 2s infinite alternate ease-in-out;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.live-match-btn:hover {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: #ff0000;
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+}
+
+.live-match-btn .dot {
+    font-size: 0.7rem;
+    animation: live-pulse 1.2s infinite ease-in-out;
+}
+
+@keyframes live-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.4);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes live-glow {
+    0% {
+        box-shadow: 0 0 5px rgba(255, 0, 0, 0.2);
+    }
+
+    100% {
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    }
+}
+
 @keyframes shine {
     0% {
         transform: translateX(-100%) translateY(-100%) rotate(45deg);
