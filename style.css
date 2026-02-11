@@ -284,6 +284,17 @@ body {
 .cards-carousel {
     overflow: visible;
     position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.carousel-nav-wrapper {
+    display: flex;
+    gap: 1rem;
+    margin-top: 3rem;
+    order: 2;
+    /* Ensure it's below the carousel track */
+    z-index: 10;
 }
 
 .carousel-track {
