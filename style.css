@@ -489,7 +489,8 @@ body {
 
 /* Live Match Button */
 .live-match-btn {
-    display: flex;
+    display: none;
+    /* Hidden until requested to show again */
     align-items: center;
     gap: 0.8rem;
     background: rgba(255, 0, 0, 0.1);
